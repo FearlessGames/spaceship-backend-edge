@@ -10,11 +10,17 @@ import java.util.List;
 
 public class LoginHandler {
 
-	private final List<String> users = Arrays.asList("hiflyer", "demazia");
+	private final RemoteLoginService remoteLoginService;
+
+	public LoginHandler(RemoteLoginService remoteLoginService) {
+		this.remoteLoginService = remoteLoginService;
+	}
 
 	public Observable<Void> handle(HttpServerRequest<ByteBuf> request, final HttpServerResponse<ByteBuf> response) {
 		String userName = request.getQueryParameters().get("userName").get(0);
-		if (users.contains(userName)) {
+		Observable<LoginResult> login = remoteLoginService.login(userName);
+
+		if (login.toBlocking().first().isSuccess()) {
 			writeSessionKey(response, userName);
 		} else {
 			response.writeString("Unknown user");
