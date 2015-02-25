@@ -7,8 +7,6 @@ import rx.Observable;
 import rx.functions.Func1;
 
 import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.List;
 
 public class RemoteLoginService {
 
