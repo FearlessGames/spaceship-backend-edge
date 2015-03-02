@@ -3,12 +3,10 @@ package se.fearless.spaceship.edge;
 import io.netty.buffer.ByteBuf;
 import io.reactivex.netty.protocol.http.server.HttpServerRequest;
 import io.reactivex.netty.protocol.http.server.HttpServerResponse;
+import io.reactivex.netty.protocol.http.server.RequestHandler;
 import rx.Observable;
 
-import java.util.Arrays;
-import java.util.List;
-
-public class LoginHandler {
+public class LoginHandler implements RequestHandler<ByteBuf, ByteBuf> {
 
 	private final RemoteLoginService remoteLoginService;
 
@@ -16,6 +14,7 @@ public class LoginHandler {
 		this.remoteLoginService = remoteLoginService;
 	}
 
+	@Override
 	public Observable<Void> handle(HttpServerRequest<ByteBuf> request, final HttpServerResponse<ByteBuf> response) {
 		String userName = request.getQueryParameters().get("userName").get(0);
 		Observable<LoginResult> login = remoteLoginService.login(userName);
