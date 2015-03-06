@@ -9,7 +9,9 @@ public class Edge {
 		final LoginHandler loginHandler = new LoginHandler(new RemoteLoginService());
 		Router router = new Router();
 		router.addRoute(HttpMethod.GET, "/login", loginHandler);
+		router.addRoute(HttpMethod.GET, "/testAuth", new AuthRequestHandler(loginHandler, (userName, sessionKey) -> true));
 		MicroService microService = new MicroService(8888, router);
 		microService.start();
 	}
+
 }
