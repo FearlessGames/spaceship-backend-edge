@@ -19,6 +19,8 @@ import static se.mockachino.Mockachino.*;
 
 public class AuthRequestHandlerTest {
 
+	public static final String USERNAME_VALUE = "hiflyer";
+	public static final String SESSIONKEY_VALUE = "123456789";
 	private RequestHandler<ByteBuf, ByteBuf> delegate;
 	private AuthRequestHandler.Authenticator authenticator;
 	private AuthRequestHandler authRequestHandler;
@@ -35,8 +37,8 @@ public class AuthRequestHandlerTest {
 		when(request.getHttpMethod()).thenReturn(HttpMethod.GET);
 		when(request.getPath()).thenReturn("/protectedPath");
 		Map<String, List<String>> parameters = ImmutableMap.of(
-				"userName", Lists.newArrayList("hiflyer"),
-				"sessionKey", Lists.newArrayList("123456789"));
+				AuthRequestHandler.USER_NAME_PARAMETER_NAME, Lists.newArrayList(USERNAME_VALUE),
+				AuthRequestHandler.SESSION_KEY_PARAMETER_NAME, Lists.newArrayList(SESSIONKEY_VALUE));
 		when(request.getQueryParameters()).thenReturn(parameters);
 
 		response = HttpRequestMocks.response();
@@ -44,7 +46,7 @@ public class AuthRequestHandlerTest {
 
 	@Test
 	public void authenticatedRequestGoesThroughToHandler() throws Exception {
-		when(authenticator.allowsAccess("hiflyer", "123456789")).thenReturn(true);
+		when(authenticator.allowsAccess(USERNAME_VALUE, SESSIONKEY_VALUE)).thenReturn(true);
 
 		authRequestHandler.handle(request, response);
 
@@ -53,7 +55,7 @@ public class AuthRequestHandlerTest {
 
 	@Test
 	public void accessForbiddenWithoutAuthentication() throws Exception {
-		when(authenticator.allowsAccess("hiflyer", "123456789")).thenReturn(false);
+		when(authenticator.allowsAccess(USERNAME_VALUE, SESSIONKEY_VALUE)).thenReturn(false);
 
 		authRequestHandler.handle(request, response);
 

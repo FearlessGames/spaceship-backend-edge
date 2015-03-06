@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 class AuthRequestHandler implements RequestHandler<ByteBuf, ByteBuf> {
+	public static final String USER_NAME_PARAMETER_NAME = "userName";
+	public static final String SESSION_KEY_PARAMETER_NAME = "sessionKey";
 	private final RequestHandler<ByteBuf, ByteBuf> delegate;
 	private final Authenticator authenticator;
 
@@ -23,8 +25,8 @@ class AuthRequestHandler implements RequestHandler<ByteBuf, ByteBuf> {
 	@Override
 	public Observable<Void> handle(HttpServerRequest<ByteBuf> request, HttpServerResponse<ByteBuf> response) {
 		Map<String, List<String>> queryParameters = request.getQueryParameters();
-		String userName = getParameter(queryParameters, "userName");
-		String sessionKey = getParameter(queryParameters, "sessionKey");
+		String userName = getParameter(queryParameters, USER_NAME_PARAMETER_NAME);
+		String sessionKey = getParameter(queryParameters, SESSION_KEY_PARAMETER_NAME);
 
 		if (authenticator.allowsAccess(userName, sessionKey)) {
 			return delegate.handle(request, response);
