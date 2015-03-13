@@ -2,7 +2,10 @@ package se.fearless.spaceship.edge;
 
 import com.netflix.eureka2.client.resolver.ServerResolver;
 import com.netflix.eureka2.client.resolver.ServerResolvers;
-import se.fearless.service.*;
+import se.fearless.service.EurekaServerInfo;
+import se.fearless.service.HttpMethod;
+import se.fearless.service.MicroService;
+import se.fearless.service.Router;
 
 public class Edge {
 	public static void main(String[] args) throws InterruptedException {
@@ -10,7 +13,7 @@ public class Edge {
 
 		EurekaServerInfo eurekaServerInfo = new EurekaServerInfo(ServerResolvers.from(new ServerResolver.Server("localhost", 2222)),
 				ServerResolvers.from(new ServerResolver.Server("localhost", 2223)));
-		MicroService microService = new MicroService(8889, router, "spaceship", "edge", eurekaServerInfo, new HostnameProvider());
+		MicroService microService = new MicroService.Builder(router, "spaceship", "edge").build();
 		microService.start();
 
 		final LoginHandler loginHandler = new LoginHandler(new RemoteLoginService(microService.getServiceLocator("auth")));
