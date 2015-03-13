@@ -11,7 +11,7 @@ repositories {
 // In this section you declare the dependencies for your production and test code
 dependencies {
 	compile 'se.fearless:spaceship-protocol:0.1-SNAPSHOT'
-	compile 'se.fearless:fearless-service:0.1-SNAPSHOT'
+	compile 'se.fearless:fearless-service:0.2-SNAPSHOT'
 	testCompile 'junit:junit:4.12'
 	testCompile 'se.mockachino:mockachino:0.6.1'
 }
