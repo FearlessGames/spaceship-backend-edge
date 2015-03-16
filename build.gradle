@@ -14,4 +14,5 @@ dependencies {
 	compile 'se.fearless:fearless-service:0.2-SNAPSHOT'
 	testCompile 'junit:junit:4.12'
 	testCompile 'se.mockachino:mockachino:0.6.1'
+	testCompile 'se.fearless:rxtestutils:0.1'
 }
