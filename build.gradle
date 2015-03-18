@@ -5,8 +5,15 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
-	jcenter()
 	mavenLocal()
+	jcenter()
+	maven {
+		url 'http://flexo.fearlessgames.se/artifactory/libs-local'
+		credentials {
+			username = "reader"
+			password = "f3ArlessGamesR0X!"
+		}
+	}
 }
 
 // In this section you declare the dependencies for your production and test code
