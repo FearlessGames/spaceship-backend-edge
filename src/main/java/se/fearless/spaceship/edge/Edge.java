@@ -16,8 +16,6 @@ public class Edge {
 	public static void main(String[] args) throws InterruptedException {
 		Router router = new Router();
 
-		EurekaServerInfo eurekaServerInfo = new EurekaServerInfo(ServerResolvers.from(new ServerResolver.Server("localhost", 2222)),
-				ServerResolvers.from(new ServerResolver.Server("localhost", 2223)));
 		MicroService microService = new MicroService.Builder(router, "spaceship", "edge").withPort(8888).build();
 		microService.start();
 
