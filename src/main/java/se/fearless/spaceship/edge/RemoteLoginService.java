@@ -21,7 +21,7 @@ public class RemoteLoginService {
 	Observable<LoginResult> login(String userName) {
 		String server = authServiceLocator.get();
 
-		Observable<HttpClientResponse<ByteBuf>> httpGet = RxNetty.createHttpGet(server + "/" + userName);
+		Observable<HttpClientResponse<ByteBuf>> httpGet = RxNetty.createHttpGet(server + "/basic/" + userName);
 		return httpGet.flatMap(new Func1<HttpClientResponse<ByteBuf>, Observable<LoginResult>>() {
 			@Override
 			public Observable<LoginResult> call(HttpClientResponse<ByteBuf> byteBufHttpClientResponse) {
