@@ -10,8 +10,6 @@ import se.fearless.service.ServiceLocator;
 import java.nio.charset.Charset;
 
 public class RemoteLoginService {
-
-	private static final String LOGIN_SERVER = "http://localhost:9999";
 	private final ServiceLocator authServiceLocator;
 
 	public RemoteLoginService(ServiceLocator authServiceLocator) {
