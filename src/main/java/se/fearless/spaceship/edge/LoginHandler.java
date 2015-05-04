@@ -16,8 +16,9 @@ public class LoginHandler implements RequestHandler<ByteBuf, ByteBuf> {
 
 	@Override
 	public Observable<Void> handle(HttpServerRequest<ByteBuf> request, final HttpServerResponse<ByteBuf> response) {
-		String userName = request.getQueryParameters().get("userName").get(0);
-		Observable<LoginResult> login = remoteLoginService.login(userName);
+		String userName = getParameter(request, "userName");
+		String type = getParameter(request, "type");
+		Observable<LoginResult> login = remoteLoginService.login(type, userName);
 
 		if (login.toBlocking().first().isSuccess()) {
 			writeSessionKey(response, userName);
@@ -26,6 +27,10 @@ public class LoginHandler implements RequestHandler<ByteBuf, ByteBuf> {
 		}
 		response.writeString("\n");
 		return response.close();
+	}
+
+	private String getParameter(HttpServerRequest<ByteBuf> request, String name) {
+		return request.getQueryParameters().get(name).get(0);
 	}
 
 	private void writeSessionKey(HttpServerResponse<ByteBuf> response, String userName) {

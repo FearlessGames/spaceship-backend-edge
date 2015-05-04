@@ -14,11 +14,19 @@ repositories {
 			password = "f3ArlessGamesR0X!"
 		}
 	}
+	maven {
+		url 'http://flexo.fearlessgames.se/artifactory/spaceship'
+		credentials {
+			username = "reader"
+			password = "f3ArlessGamesR0X!"
+		}
+	}
 }
 
 // In this section you declare the dependencies for your production and test code
 dependencies {
 	compile 'se.fearless:fearless-service:0.2-SNAPSHOT'
+	compile 'se.fearless.spaceship:spaceship-backend-protocol:0.1-SNAPSHOT'
 	testCompile 'junit:junit:4.12'
 	testCompile 'se.mockachino:mockachino:0.6.1'
 	testCompile 'se.fearless:rxtestutils:0.1'
