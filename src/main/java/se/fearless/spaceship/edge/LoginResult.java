@@ -1,26 +1,22 @@
 package se.fearless.spaceship.edge;
 
-public abstract class LoginResult {
+public class LoginResult {
+	boolean result;
+	String userName;
 
-	private static final LoginResult SUCCESS = new LoginResult() {
-		@Override
-		public boolean isSuccess() {
-			return true;
-		}
-	};
-	private static final LoginResult FAIL = new LoginResult() {
-		@Override
-		public boolean isSuccess() {
-			return false;
-		}
-	};
-
-	public boolean isSuccess() {
-		return true;
+	private LoginResult(boolean result, String userName) {
+		this.result = result;
+		this.userName = userName;
 	}
 
-	public static LoginResult success() {
-		return SUCCESS;
+	private static final LoginResult FAIL = new LoginResult(false, null);
+
+	public boolean isSuccess() {
+		return result;
+	}
+
+	public static LoginResult success(String userName) {
+		return new LoginResult(true, userName);
 	}
 
 	public static LoginResult failed() {
