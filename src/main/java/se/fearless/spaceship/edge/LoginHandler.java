@@ -5,13 +5,25 @@ import io.reactivex.netty.protocol.http.server.HttpServerRequest;
 import io.reactivex.netty.protocol.http.server.HttpServerResponse;
 import io.reactivex.netty.protocol.http.server.RequestHandler;
 import rx.Observable;
+import se.fearless.common.json.JsonSerializer;
+import se.fearless.common.security.FearCrypto;
+
+import java.nio.charset.Charset;
+import java.util.Base64;
 
 public class LoginHandler implements RequestHandler<ByteBuf, ByteBuf> {
 
 	private final RemoteLoginService remoteLoginService;
+	private final FearCrypto fearCrypto;
+	private final JsonSerializer jsonSerializer;
+	private final byte[] key;
 
-	public LoginHandler(RemoteLoginService remoteLoginService) {
+	public LoginHandler(RemoteLoginService remoteLoginService, FearCrypto fearCrypto, JsonSerializer jsonSerializer, String edgePassword) {
 		this.remoteLoginService = remoteLoginService;
+		this.fearCrypto = fearCrypto;
+		this.jsonSerializer = jsonSerializer;
+
+		key = fearCrypto.generateKey(edgePassword);
 	}
 
 	@Override
@@ -34,6 +46,16 @@ public class LoginHandler implements RequestHandler<ByteBuf, ByteBuf> {
 	}
 
 	private void writeSessionKey(HttpServerResponse<ByteBuf> response, String userName) {
-		response.writeString("{sessionKey:'"+ userName + "'}");
+		byte[] encryptedData = fearCrypto.encrypt(key, userName.getBytes(Charset.forName("UTF-8")));
+		ClientLoginResult loginResult = new ClientLoginResult(Base64.getEncoder().encodeToString(encryptedData));
+		response.writeString(jsonSerializer.toJson(loginResult));
+	}
+}
+
+class ClientLoginResult {
+	private String sessionKey;
+
+	public ClientLoginResult(String sessionKey) {
+		this.sessionKey = sessionKey;
 	}
 }

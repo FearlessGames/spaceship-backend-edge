@@ -12,7 +12,7 @@ public class Edge {
 		MicroService microService = new MicroService.Builder(router, "spaceship", "edge").withPort(8888).build();
 		microService.start();
 
-		final LoginHandler loginHandler = new LoginHandler(new RemoteLoginService(microService.getServiceLocator("auth"), new GsonSerializer()));
+		final LoginHandler loginHandler = new LoginHandler(new RemoteLoginService(microService.getServiceLocator("auth"), new GsonSerializer()), fearCrypto, jsonSerializer, edgePassword);
 
 		router.addRoute(HttpMethod.GET, "/login", loginHandler);
 		router.addRoute(HttpMethod.GET, "/testAuth", new AuthRequestHandler(loginHandler, (userName, sessionKey) -> true));

@@ -27,6 +27,7 @@ repositories {
 dependencies {
 	compile 'se.fearless:fearless-service:0.2-SNAPSHOT'
 	compile 'se.fearless.fearless-common:json:1.0-SNAPSHOT'
+	compile 'se.fearless.fearless-common:security:1.0-SNAPSHOT'
 	compile 'se.fearless.spaceship:spaceship-backend-protocol:0.1-SNAPSHOT'
 	testCompile 'junit:junit:4.12'
 	testCompile 'se.mockachino:mockachino:0.6.1'
