@@ -33,7 +33,7 @@ public class RemoteLoginService {
 			Observable<ByteBuf> content = byteBufHttpClientResponse.getContent();
 
 			return content.map(byteBuf -> {
-				AuthResultDTO authResult = jsonSerializer.fromJson(AuthResultDTO.class, byteBuf.toString(Charset.forName("UTF-8")));
+				AuthResultDTO authResult = jsonSerializer.fromJson(byteBuf.toString(Charset.forName("UTF-8")), AuthResultDTO.class);
 				if (authResult.isSuccess()) {
 					return LoginResult.success(authResult.getUserName());
 				} else {

@@ -36,7 +36,7 @@ public class JsonRpcMarshaller {
 
 	public List<JsonRpcRequest> parseContent(String content) {
 		System.out.println("Parsing content on " + Thread.currentThread());
-		JsonRpcRequest[] jsonRpcRequests = jsonSerializer.fromJson(JsonRpcRequest[].class, content);
+		JsonRpcRequest[] jsonRpcRequests = jsonSerializer.fromJson(content, JsonRpcRequest[].class);
 		return Arrays.asList(jsonRpcRequests);
 	}
 }
