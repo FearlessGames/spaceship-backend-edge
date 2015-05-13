@@ -9,7 +9,7 @@ import rx.Observable;
 import se.fearless.common.json.JsonSerializer;
 import se.fearless.common.security.FearCrypto;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +50,7 @@ public class LoginHandler implements RequestHandler<ByteBuf, ByteBuf> {
 	}
 
 	private void writeSessionKey(HttpServerResponse<ByteBuf> response, String userName) {
-		byte[] encryptedData = fearCrypto.encrypt(key, userName.getBytes(Charset.forName("UTF-8")));
+		byte[] encryptedData = fearCrypto.encrypt(key, userName.getBytes(StandardCharsets.UTF_8));
 		String encodedString = Base64.getEncoder().encodeToString(encryptedData);
 		System.out.println(encodedString);
 		ClientLoginResult loginResult = new ClientLoginResult(encodedString);

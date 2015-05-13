@@ -10,7 +10,7 @@ import se.fearless.common.json.JsonSerializer;
 import se.fearless.service.ServiceLocator;
 import se.fearless.spaceship.auth.AuthResultDTO;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class RemoteLoginService {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -33,7 +33,7 @@ public class RemoteLoginService {
 			Observable<ByteBuf> content = byteBufHttpClientResponse.getContent();
 
 			return content.map(byteBuf -> {
-				AuthResultDTO authResult = jsonSerializer.fromJson(byteBuf.toString(Charset.forName("UTF-8")), AuthResultDTO.class);
+				AuthResultDTO authResult = jsonSerializer.fromJson(byteBuf.toString(StandardCharsets.UTF_8), AuthResultDTO.class);
 				if (authResult.isSuccess()) {
 					return LoginResult.success(authResult.getUserName());
 				} else {
