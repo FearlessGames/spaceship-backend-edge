@@ -1,6 +1,7 @@
 package se.fearless.spaceship.edge;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import io.reactivex.netty.protocol.http.server.HttpServerRequest;
 import io.reactivex.netty.protocol.http.server.HttpServerResponse;
 import io.reactivex.netty.protocol.http.server.RequestHandler;
@@ -10,6 +11,8 @@ import se.fearless.common.security.FearCrypto;
 
 import java.nio.charset.Charset;
 import java.util.Base64;
+import java.util.List;
+import java.util.Map;
 
 public class LoginHandler implements RequestHandler<ByteBuf, ByteBuf> {
 
@@ -28,26 +31,29 @@ public class LoginHandler implements RequestHandler<ByteBuf, ByteBuf> {
 
 	@Override
 	public Observable<Void> handle(HttpServerRequest<ByteBuf> request, final HttpServerResponse<ByteBuf> response) {
-		String userName = getParameter(request, "userName");
+		String token = getParameter(request, "token");
 		String type = getParameter(request, "type");
-		Observable<LoginResult> login = remoteLoginService.login(type, userName);
+		Observable<LoginResult> login = remoteLoginService.login(type, token);
 
 		if (login.toBlocking().first().isSuccess()) {
-			writeSessionKey(response, userName);
+			writeSessionKey(response, token);
+			response.writeString("\n");
 		} else {
-			response.writeString("Unknown user");
+			response.setStatus(HttpResponseStatus.FORBIDDEN);
 		}
-		response.writeString("\n");
 		return response.close();
 	}
 
 	private String getParameter(HttpServerRequest<ByteBuf> request, String name) {
-		return request.getQueryParameters().get(name).get(0);
+		Map<String, List<String>> queryParameters = request.getQueryParameters();
+		return queryParameters.get(name).get(0);
 	}
 
 	private void writeSessionKey(HttpServerResponse<ByteBuf> response, String userName) {
 		byte[] encryptedData = fearCrypto.encrypt(key, userName.getBytes(Charset.forName("UTF-8")));
-		ClientLoginResult loginResult = new ClientLoginResult(Base64.getEncoder().encodeToString(encryptedData));
+		String encodedString = Base64.getEncoder().encodeToString(encryptedData);
+		System.out.println(encodedString);
+		ClientLoginResult loginResult = new ClientLoginResult(encodedString);
 		response.writeString(jsonSerializer.toJson(loginResult));
 	}
 }
