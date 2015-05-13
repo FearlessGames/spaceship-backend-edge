@@ -22,7 +22,6 @@ public class Edge {
 		final LoginHandler loginHandler = new LoginHandler(new RemoteLoginService(microService.getServiceLocator("auth"), jsonSerializer), fearCrypto, jsonSerializer, EDGE_PASSWORD);
 
 		router.addRoute(HttpMethod.GET, "/login", loginHandler);
-		router.addRoute(HttpMethod.GET, "/testAuth", new AuthRequestHandler(loginHandler, (userName, sessionKey) -> true));
 		router.addRoute(HttpMethod.GET, "/shutdown", (request, response) -> {
 			microService.stop();
 			return response.close();
