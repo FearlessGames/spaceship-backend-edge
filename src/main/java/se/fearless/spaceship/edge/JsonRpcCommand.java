@@ -2,6 +2,8 @@ package se.fearless.spaceship.edge;
 
 import rx.Observable;
 import rx.schedulers.Schedulers;
+import se.fearless.common.json.rpc.JsonRpcRequest;
+import se.fearless.common.json.rpc.JsonRpcResponse;
 
 import java.util.Date;
 

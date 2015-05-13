@@ -1,6 +1,7 @@
 package se.fearless.spaceship.edge;
 
 import se.fearless.common.json.GsonSerializer;
+import se.fearless.common.json.rpc.JsonRpcMarshaller;
 import se.fearless.common.security.AesCrypto;
 import se.fearless.common.security.FearCrypto;
 import se.fearless.service.HttpMethod;
