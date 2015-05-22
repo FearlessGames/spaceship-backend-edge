@@ -7,6 +7,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ReflectionMethodInvoker implements MethodInvoker {
 
+	public static final String NO_TARGET_REGISTERED_WITH_NAME = "No target registered with name \"%s\"";
+	public static final String METHOD_NOT_FOUND_ON_TARGET = "Method \"%s\" not found on target \"%s\"";
+	public static final String METHOD_IS_NOT_ACCESSIBLE = "Method \"%s\" is not accessible";
 	private final Map<String, Object> targets = new ConcurrentHashMap<>();
 
 	@Override
@@ -14,27 +17,27 @@ public class ReflectionMethodInvoker implements MethodInvoker {
 		Method method = null;
 		Object target = targets.get(name);
 		if (target == null) {
-			throw new MethodInvocationException("No target registered with name " + name);
+			throw new MethodInvocationException(String.format(NO_TARGET_REGISTERED_WITH_NAME, name));
 		}
-		method = getMethod(methodName, target);
+		method = getMethod(methodName, target, name);
 		try {
 			return method.invoke(target, args);
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			throw new MethodInvocationException(String.format(METHOD_IS_NOT_ACCESSIBLE, methodName));
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	private Method getMethod(String methodName, Object target) {
-		Method[] methods = target.getClass().getMethods();
+	private Method getMethod(String methodName, Object target, String targetName) {
+		Method[] methods = target.getClass().getDeclaredMethods();
 		for (Method currentMethod : methods) {
 			if (currentMethod.getName().equals(methodName)) {
 				return currentMethod;
 			}
 		}
-		return null;
+		throw new MethodInvocationException(String.format(METHOD_NOT_FOUND_ON_TARGET, methodName, targetName));
 	}
 
 	@Override
@@ -45,7 +48,7 @@ public class ReflectionMethodInvoker implements MethodInvoker {
 	@Override
 	public Class<?>[] getMethodParameters(String name, String methodName) {
 		Object target = targets.get(name);
-		Method method = getMethod(methodName, target);
+		Method method = getMethod(methodName, target, name);
 		if (method != null) {
 			return method.getParameterTypes();
 		}

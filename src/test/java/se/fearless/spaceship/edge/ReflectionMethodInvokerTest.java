@@ -58,7 +58,27 @@ public class ReflectionMethodInvokerTest {
 			reflectionMethodInvoker.invoke("SomeClass", "method", new Object[]{});
 			fail();
 		} catch (MethodInvocationException e) {
+			assertEquals(String.format(ReflectionMethodInvoker.NO_TARGET_REGISTERED_WITH_NAME, "SomeClass"), e.getMessage());
+		}
+	}
 
+	@Test
+	public void invokingNonExistingMethodShouldThrowException() throws Exception {
+		try {
+			reflectionMethodInvoker.invoke("SimpleClass", "method", new Object[]{});
+			fail();
+		} catch (MethodInvocationException e) {
+			assertEquals(String.format(ReflectionMethodInvoker.METHOD_NOT_FOUND_ON_TARGET, "method", "SimpleClass"), e.getMessage());
+		}
+	}
+
+	@Test
+	public void invokingPrivateMethodShouldThrowException() throws Exception {
+		try {
+			Object returnValue = reflectionMethodInvoker.invoke("SimpleClass", "privateMethod", new Object[]{});
+			fail();
+		} catch (MethodInvocationException e) {
+			assertEquals(String.format(ReflectionMethodInvoker.METHOD_IS_NOT_ACCESSIBLE, "privateMethod"), e.getMessage());
 		}
 	}
 
@@ -87,6 +107,9 @@ public class ReflectionMethodInvokerTest {
 
 		public SimpleDto methodThree(SimpleDto[] dtos) {
 			return dtos[0];
+		}
+
+		private void privateMethod() {
 		}
 	}
 
