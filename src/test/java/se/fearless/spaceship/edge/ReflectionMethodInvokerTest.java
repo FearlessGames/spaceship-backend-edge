@@ -82,6 +82,28 @@ public class ReflectionMethodInvokerTest {
 		}
 	}
 
+	@Test
+	public void invokingMethodWithTooFewParametersShouldThrowExceptoin() throws Exception {
+		try {
+			Object returnValue = reflectionMethodInvoker.invoke("SimpleClass", "methodOne", new Object[]{});
+			fail();
+		} catch (MethodInvocationException e) {
+			assertEquals(String.format(ReflectionMethodInvoker.ARGUMENTS_DON_T_MATCH_EXPECTED, "String", ""), e.getMessage());
+		}
+	}
+
+
+	@Test
+	public void invokingMethodWithWrongTypeOfParameterShouldThrowExceptoin() throws Exception {
+		try {
+			Object returnValue = reflectionMethodInvoker.invoke("SimpleClass", "methodOne", new Object[]{3});
+			fail();
+		} catch (MethodInvocationException e) {
+
+		}
+	}
+
+
 	private void verifyThatReturnValueMatches(Object expectedValue, Object returnValue) {
 		assertEquals(expectedValue.getClass(), returnValue.getClass());
 		assertEquals(expectedValue, returnValue);
