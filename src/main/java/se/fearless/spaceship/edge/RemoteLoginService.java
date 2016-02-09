@@ -6,6 +6,9 @@ import io.reactivex.netty.protocol.http.client.HttpClientResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
+import rx.functions.Func1;
+import rx.functions.Function;
+import rx.functions.Functions;
 import se.fearless.common.json.JsonSerializer;
 import se.fearless.service.ServiceLocator;
 import se.fearless.spaceship.auth.AuthResultDTO;
@@ -28,21 +31,27 @@ public class RemoteLoginService {
 		String uri = server + '/' + type + '/' + token;
 		logger.trace("Calling auth service with " + uri);
 
+		return callService(uri, this::parseLoginResult);
+
+	}
+
+	private <T> Observable<T> callService(String uri, Func1<ByteBuf, T> resultMapper) {
 		Observable<HttpClientResponse<ByteBuf>> httpGet = RxNetty.createHttpGet(uri);
 		return httpGet.flatMap(byteBufHttpClientResponse -> {
 			Observable<ByteBuf> content = byteBufHttpClientResponse.getContent();
 
-			return content.map(byteBuf -> {
-				AuthResultDTO authResult = jsonSerializer.fromJson(byteBuf.toString(StandardCharsets.UTF_8), AuthResultDTO.class);
-				if (authResult.isSuccess()) {
-					return LoginResult.success(authResult.getUserName());
-				} else {
-					return LoginResult.failed();
-				}
-			});
+			return content.map(resultMapper);
 
 		});
+	}
 
+	private LoginResult parseLoginResult(ByteBuf byteBuf) {
+		AuthResultDTO authResult = jsonSerializer.fromJson(byteBuf.toString(StandardCharsets.UTF_8), AuthResultDTO.class);
+		if (authResult.isSuccess()) {
+			return LoginResult.success(authResult.getUserName());
+		} else {
+			return LoginResult.failed();
+		}
 	}
 
 }
