@@ -25,7 +25,7 @@ repositories {
 
 // In this section you declare the dependencies for your production and test code
 dependencies {
-	compile 'se.fearless:fearless-service:0.2-SNAPSHOT'
+	compile 'se.fearless:fearless-service:0.2'
 	compile 'se.fearless.fearless-common:json:1.0-SNAPSHOT'
 	compile 'se.fearless.fearless-common:security:1.0-SNAPSHOT'
 	compile 'se.fearless.spaceship:spaceship-backend-protocol:0.1-SNAPSHOT'

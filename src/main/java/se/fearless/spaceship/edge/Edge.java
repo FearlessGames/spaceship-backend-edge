@@ -20,7 +20,7 @@ public class Edge {
 
 		GsonSerializer jsonSerializer = new GsonSerializer();
 		FearCrypto fearCrypto = new AesCrypto();
-		final LoginHandler loginHandler = new LoginHandler(new RemoteLoginService(microService.getServiceLocator("auth"), jsonSerializer), fearCrypto, jsonSerializer, EDGE_PASSWORD);
+		final LoginHandler loginHandler = new LoginHandler(new RemoteLoginService(microService, jsonSerializer), fearCrypto, jsonSerializer, EDGE_PASSWORD);
 
 		router.addRoute(HttpMethod.GET, "/login", loginHandler);
 
