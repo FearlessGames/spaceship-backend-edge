@@ -29,6 +29,7 @@ dependencies {
 	compile 'se.fearless.fearless-common:json:1.0-SNAPSHOT'
 	compile 'se.fearless.fearless-common:security:1.0-SNAPSHOT'
 	compile 'se.fearless.spaceship:spaceship-backend-protocol:0.1-SNAPSHOT'
+	compile 'com.google.guava:guava:18.0'
 	testCompile 'junit:junit:4.12'
 	testCompile 'se.mockachino:mockachino:0.6.1'
 	testCompile 'se.fearless:rxtestutils:0.1'
